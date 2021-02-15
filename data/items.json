@@ -1,0 +1,34 @@
+[
+    {
+        "name": "Glock-18 | Oxide Blaze (Well-Worn)",
+        "range": [10.44, 13.30]
+    },
+    {
+        "name": "Glock-18 | Sacrifice (Well-Worn)",
+        "range": [10.44, 13.30]
+    },
+    {
+        "name": "Nova | Predator (Factory New)",
+        "range": [10.44, 13.30]
+    },
+    {
+        "name": "MAC-10 | Carnivore (Minimal Wear)",
+        "range": [10.44, 13.30]
+    },
+    {
+        "name": "Negev | Terrain (Well-Worn)",
+        "range": [10.44, 13.30]
+    },
+    {
+        "name": "Negev | Dazzle (Field-Tested)",
+        "range": [6.40, 8.65]
+    },
+    {
+        "name": "R8 Revolver | Night (Field-Tested)",
+        "range": [4.31, 5.88]
+    },
+    {
+        "name": "Sawed-Off | Black Sand (Field-Tested)",
+        "range": [6.48, 8.95]
+    }
+]
