@@ -27,7 +27,7 @@ class Items {
         })
     }
 
-    static async getOrders(sessionID) {
+    static async getOrders(sessionID, balance) {
         let orders = [];
 
         for(const item of Items.items) {
@@ -40,6 +40,10 @@ class Items {
 
             if(listings[index].price > item.range[1]) {
                 continue;
+            }
+
+            if(balance < listings[index].price) {
+                continue
             }
 
             orders.push({ 
@@ -82,8 +86,8 @@ class Items {
         return listings;
     }
 
-    static async buyListing(item, sessionID) {
-        return new Promise(async (resolve, reject) => {
+    static async buyListing(item, sessionID, cookies) {
+        return new Promise(async (resolve, reject) => {            
             const total = item.price * 100;
             const subtotal = item.defaultPrice * 100;
             const fee = total - subtotal;
@@ -101,13 +105,14 @@ class Items {
             const response = await fetch('https://steamcommunity.com/market/buylisting/' + item.id, {
                 method: 'POST',
                 headers: {
+                    "Accept": "*/*",
+                    "Accept-Encoding": "gzip, deflate, br",
+                    "Origin": "http://steamcommunity.com",
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36',
                     'Referer': 'https://steamcommunity.com/market/listings/730/' + item.name,
-                    'Cookie': "sessionid=" + sessionID,
                     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-                    'Sec-Fetch-Site': 'same-origin',
-                    'Sec-Fetch-Mode': 'cors',
-                    'Sec-Fetch-Dest': 'empty'
+                    "Authority" : "steamcommunity.com",
+                    'Cookie': cookies
                 },
                 body: params
             })

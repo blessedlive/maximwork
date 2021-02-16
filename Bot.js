@@ -58,6 +58,7 @@ class Bot {
 
     async onWebSession(sessionID, cookies) {
         this.sessionID = sessionID;
+        this.cookies = cookies;
 
         if(!this.client.wallet.hasWallet) {
             return this.log("Нет кошелька");
@@ -80,10 +81,15 @@ class Bot {
     async startPurchase() {
         this.log("Доступно к покупке " + this.orders.length + " лот(ов)")
         for(const order of this.orders) {
-            this.log("Собираюсь купить предмет - " + JSON.stringify(order), true)
-            const response = await Items.buyListing(order, this.sessionID);
-            this.log(JSON.stringify(response), true);
-            this.log("Баланс бота: " + this.client.wallet.balance + " руб", true)
+            this.log("Собираюсь купить предмет - " + order.name, true)
+            const response = await Items.buyListing(order, this.sessionID, this.cookies.join("; "));
+
+            if(response.message) {
+                this.log("Неудалось купить предмет - " + JSON.stringify(response), true);
+            } else {
+                this.log("(-" + order.price +" руб) Предмет куплен - " + order.name, true);
+                this.log("Баланс бота: " + this.client.wallet.balance + " руб", true)
+            }
             await this.sleep(2000);
         }
 
