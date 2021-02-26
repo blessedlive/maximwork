@@ -12,16 +12,16 @@ class Items {
         return Items.items;
     }
 
-    static async getListing(name, sessionID) {
+    static async getListing(name, appID, sessionID) {
         return new Promise((resolve, reject) => {
-            fetch('https://steamcommunity.com/market/listings/730/' + name, {
+            fetch('https://steamcommunity.com/market/listings/' + appID + '/' + name, {
                 headers: {
                     'Cookie': "sessionid=" + sessionID
                 }
             })
                 .then(res => res.text())
                 .then(body => {
-                    const listings = Items.parseHTML(body, name);
+                    const listings = Items.parseHTML(body, name, appID);
                     resolve(listings);
                 });
         })
@@ -31,7 +31,7 @@ class Items {
         let orders = [];
 
         for(const item of Items.items) {
-            const listings = await Items.getListing(item.name, sessionID);
+            const listings = await Items.getListing(item.name, item.appID, sessionID);
             const index = listings.length - 1;
 
             if(!listings.length) {
@@ -50,7 +50,8 @@ class Items {
                 id: listings[index].id,
                 name: item.name,
                 price: listings[index].price,
-                defaultPrice: listings[index].defaultPrice
+                defaultPrice: listings[index].defaultPrice,
+                appID: item.appID
             })
         }
 
@@ -63,7 +64,7 @@ class Items {
         return orders;
     }
 
-    static parseHTML(html, name) {
+    static parseHTML(html, name, appID) {
         const listings = [];
 
         const $ = cheerio.load(html);
@@ -80,7 +81,7 @@ class Items {
             const price = parseFloat(item.find('.market_listing_price_with_fee').text().trim().replace(/,/, "."));
             const defaultPrice = parseFloat(item.find('.market_listing_price_without_fee').text().trim().replace(/,/, "."));
 
-            listings.push({ id, name, price, defaultPrice })
+            listings.push({ id, name, price, defaultPrice, appID })
         })
 
         return listings;
@@ -109,7 +110,7 @@ class Items {
                     "Accept-Encoding": "gzip, deflate, br",
                     "Origin": "http://steamcommunity.com",
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36',
-                    'Referer': 'https://steamcommunity.com/market/listings/730/' + item.name,
+                    'Referer': 'https://steamcommunity.com/market/listings/' + item.appID + '/' + item.name,
                     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
                     "Authority" : "steamcommunity.com",
                     'Cookie': cookies

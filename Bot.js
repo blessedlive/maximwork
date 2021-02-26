@@ -5,8 +5,6 @@ const Items = require('./Items');
 
 class Bot {
     constructor(account, proxy) {
-        this.APP_ID = 730;
-
         this.account = account;
         this.proxy = proxy;
         this.isPurchasing = false;
@@ -53,7 +51,6 @@ class Bot {
     onLogged() {
         this.log("SteamID64: " + this.client.steamID.getSteamID64());
         this.client.setPersona(SteamUser.EPersonaState.Online);
-        this.client.gamesPlayed(this.APP_ID);
     }
 
     async onWebSession(sessionID, cookies) {
